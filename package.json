@@ -1,0 +1,22 @@
+{
+    "name": "jira-clone",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server/server.js",
+    "scripts": {
+        "start": "cd server && npm start",
+        "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+        "postinstall": "cd server && npm i && cd ../client && npm i",
+        "heroku-postbuild": "cd client && npm run build",
+        "pretty": "prettier --write \"./**/*.{js,jsx,json,ts,tsx}\""
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "if-env": "^1.0.4"
+    },
+    "devDependencies": {
+        "concurrently": "^5.1.0",
+        "prettier": "^2.7.1"
+    }
+}
