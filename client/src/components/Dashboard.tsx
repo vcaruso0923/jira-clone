@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-export const Sample = () => {
+export const Dashboard = () => {
     const [form, setForm] = useState({
         name: '',
         position: '',
