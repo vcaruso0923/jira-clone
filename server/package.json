@@ -2,10 +2,12 @@
     "name": "jira-clone-server",
     "version": "1.0.0",
     "description": "",
-    "main": "server.js",
+    "main": "server.ts",
+    "type": "module",
     "scripts": {
+        "start": "npx tsx server.ts",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "watch": "nodemon"
+        "watch": "npx tsx server.ts"
     },
     "keywords": [],
     "author": "",
@@ -15,6 +17,10 @@
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "mongodb": "^6.1.0",
-        "nodemon": "^3.0.1"
+        "path": "^0.12.7",
+        "tsx": "^4.7.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.0"
     }
 }
