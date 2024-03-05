@@ -10,16 +10,13 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 const {darkAlgorithm} = theme
 
-const auth0Domain = process.env.AUTH0_DOMAIN || ''
-const auth0ClientId = process.env.AUTH0_CLIENT_ID || ''
-
 root.render(
     <React.StrictMode>
         <ConfigProvider theme={{algorithm: darkAlgorithm}}>
             <BrowserRouter>
                 <Auth0Provider
-                    domain={auth0Domain}
-                    clientId={auth0ClientId}
+                    domain='dev-qj63hh0spxbgfty4.us.auth0.com'
+                    clientId='pem4u70sZe2M0aUXqZkjBHPuaIM33jbv'
                     authorizationParams={{
                         redirect_uri: window.location.origin
                     }}
