@@ -42,7 +42,6 @@ export const App = () => {
     return (
         <div className='App'>
             {isAuthenticated && <Header/>}
-            {isAuthenticated && <Sidebar />}
             <div className={isAuthenticated ? 'application-wrapper' : 'auth-form-wrapper'}>
                 <Routes>
                     <Route index element={<AuthForm />} />

@@ -1,59 +1,83 @@
 /* Application */
 
 .App {
-  text-align: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #202124;
-  color: #fff;
-  display: flex;
-  flex-wrap: wrap;
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #202124;
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .application-wrapper {
-  height: 95%;
-  width: 80%;
-}
-
-.application-sidebar {
-  border-right: 1px solid black;
-  height: 95%;
-  width: 15%;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .application-header {
-  border-bottom: 1px solid black;
-  height: 5%;
-  width: 100%;
+    border-bottom: 1px solid black;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-left {
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.header-logo {
+  margin: 0;
+  padding: 0 16px 0 0;
+}
+
+.header-right {
+    margin-right: 24px;
+}
+
+.header-button {
+  margin: 0 16px;
 }
 
 /* AuthForm */
 
 .auth-form-wrapper {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .auth-form-container {
-  background-color: #332d2d;
-  border-radius: 16px;
-  width: 300px;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background-color: #332d2d;
+    border-radius: 16px;
+    width: 300px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-button {
-  font-size: 2rem;
-  height: auto;
-  width: auto;
-  padding: 8px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
+    font-size: 2rem;
+    height: auto;
+    width: auto;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
 }
