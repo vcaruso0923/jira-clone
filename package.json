@@ -8,7 +8,8 @@
         "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
         "postinstall": "cd server && npm i && cd ../client && npm i",
         "heroku-postbuild": "cd client && npm install && npm run build",
-        "pretty": "prettier --write \"./**/*.{js,jsx,json,ts,tsx}\""
+        "pretty": "prettier --write \"./**/*.{js,jsx,json,ts,tsx}\"",
+        "build": "cd client && npm run build"
     },
     "author": "",
     "license": "ISC",
