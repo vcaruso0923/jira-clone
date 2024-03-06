@@ -17,5 +17,8 @@
         "jsx": "react-jsx",
         "noImplicitAny": false,
         "allowImportingTsExtensions": true
+    },
+    "ts-node": {
+        "esm": true
     }
 }

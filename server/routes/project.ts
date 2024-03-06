@@ -2,19 +2,19 @@ import express, {Router} from 'express'
 import db from '../db/conn.ts'
 import {ObjectId} from 'mongodb'
 
-const recordRoutes: Router = express.Router()
+const projectRoutes: Router = express.Router()
 
-// Get a list of 50 records
-recordRoutes.get('/po', async (req, res) => {
-    let collection = await db.collection('records')
+// Get a list of 50 projects
+projectRoutes.get('/po', async (req, res) => {
+    let collection = await db.collection('projects')
     let results = await collection.find({}).limit(50).toArray()
 
     res.send(results).status(200)
 })
 
-// Fetches the latest records
-recordRoutes.get('/latest', async (req, res) => {
-    let collection = await db.collection('records')
+// Fetches the latest projects
+projectRoutes.get('/latest', async (req, res) => {
+    let collection = await db.collection('projects')
     let results = await collection
         .aggregate([
             {'$project': {'author': 1, 'title': 1, 'tags': 1, 'date': 1}},
@@ -26,8 +26,8 @@ recordRoutes.get('/latest', async (req, res) => {
 })
 
 // Get a single post
-recordRoutes.get('/:id', async (req, res) => {
-    let collection = await db.collection('records')
+projectRoutes.get('/:id', async (req, res) => {
+    let collection = await db.collection('projects')
     let query = {_id: new ObjectId(req.params.id)}
     let result = await collection.findOne(query)
 
@@ -36,8 +36,8 @@ recordRoutes.get('/:id', async (req, res) => {
 })
 
 // Add a new document to the collection
-recordRoutes.post('/record/add', async (req, res) => {
-    let collection = await db.collection('records')
+projectRoutes.post('/project/add', async (req, res) => {
+    let collection = await db.collection('projects')
     let newDocument = req.body
     newDocument.date = new Date()
     let result = await collection.insertOne(newDocument)
@@ -45,36 +45,36 @@ recordRoutes.post('/record/add', async (req, res) => {
 })
 
 // Update the post with a new comment
-recordRoutes.patch('/comment/:id', async (req, res) => {
+projectRoutes.patch('/comment/:id', async (req, res) => {
     const query = {_id: new ObjectId(req.params.id)}
     const updates = {
         $push: {comments: req.body}
     }
 
-    let collection = await db.collection('records')
+    let collection = await db.collection('projects')
     let result = await collection.updateOne(query, updates)
 
     res.send(result).status(200)
 })
 
 // Delete an entry
-recordRoutes.delete('/:id', async (req, res) => {
+projectRoutes.delete('/:id', async (req, res) => {
     const query = {_id: new ObjectId(req.params.id)}
 
-    const collection = db.collection('records')
+    const collection = db.collection('projects')
     let result = await collection.deleteOne(query)
 
     res.send(result).status(200)
 })
 
-// This section will help you delete a record
-recordRoutes.route('/:id').delete((req, response) => {
+// This section will help you delete a project
+projectRoutes.route('/:id').delete((req, response) => {
     let myquery = {_id: new ObjectId(req.params.id)}
-    db.collection('records').deleteOne(myquery, function (err, obj) {
+    db.collection('projects').deleteOne(myquery, function (err, obj) {
         if (err) throw err
         console.log('1 document deleted')
         response.json(obj)
     })
 })
 
-export default recordRoutes
+export default projectRoutes

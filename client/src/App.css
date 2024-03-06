@@ -39,8 +39,8 @@
 }
 
 .header-logo {
-  margin: 0;
-  padding: 0 16px 0 0;
+    margin: 0;
+    padding: 0 16px 0 0;
 }
 
 .header-right {
@@ -48,7 +48,7 @@
 }
 
 .header-button {
-  margin: 0 16px;
+    margin: 0 16px;
 }
 
 /* AuthForm */
@@ -80,4 +80,52 @@
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
+}
+
+/* Project.tsx */
+.projects-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.kanban-board {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.issue-card {
+    height: 70vh;
+}
+
+.issue-card-text-wrapper {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.issue-card-title {
+    margin: 0;
+    padding: 4px 4px 4px 0;
+}
+
+.issue-card-text {
+    margin: 0;
+    padding: 4px 4px 4px 0;
+}
+
+.card-moving-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.move-left,
+.move-right {
+    margin: 8px 8px 0 8px;
 }

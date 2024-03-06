@@ -1,39 +1,48 @@
-import { Request } from 'express'
+import {Request} from 'express'
 import {ObjectId} from 'mongodb'
 
 export interface IssueRequestInterface extends Partial<Request> {
+    date?: Date
+    title: string
     parentProject: ObjectId
     sprint: 'Sprint 1' | 'Sprint 2' | 'Sprint 3'
-    title: string
     issueStatus: 'Planned' | 'In Development' | 'In Clarification' | 'In QA' | 'Closed'
     issueType: 'Bug' | 'Feature' | 'Task'
     issuePriority: 'High' | 'Medium' | 'Low'
-    description: string
-    assignee: ObjectId
-    reporter: string
+    assigneeId: ObjectId
+    assigneeName: string
     workPointEstimate?: number
+    description: string
     dueDate?: Date
-    linkedTickets?: ObjectId[]
+    reporter: string
 }
 
 export interface IssueInterface {
     _Id: ObjectId
-    date: Date
+    title: string
     parentProject: ObjectId
     sprint: 'Sprint 1' | 'Sprint 2' | 'Sprint 3'
-    title: string
     issueStatus: 'Planned' | 'In Development' | 'In Clarification' | 'In QA' | 'Closed'
     issueType: 'Bug' | 'Feature' | 'Task'
     issuePriority: 'High' | 'Medium' | 'Low'
-    description: string
-    assignee: ObjectId
-    reporter: string
+    assigneeId: ObjectId
+    assigneeName: string
     workPointEstimate?: number
+    description: string
     dueDate?: Date
-    linkedTickets?: ObjectId[]
+    reporter: string
+}
+
+export interface IssuesQueryInterface {
+    sprint?: string
+    _Id?: number
+    title?: string
+    assigneeId?: number
+    projectId?: number
 }
 
 export interface ProjectRequestInterface extends Partial<Request> {
+    date: Date
     projectName: string
     childIssues?: ObjectId[]
 }

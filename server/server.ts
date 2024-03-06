@@ -3,16 +3,10 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import axios from 'axios'
-import recordRoutes from './routes/record.ts'
+import projectRoutes from './routes/project.ts'
+import issueRoutes from './routes/issue.ts'
 
 const app = express()
-
-// Global error handling
-app.use((err, _req, res, next) => {
-    console.log(err)
-    res.status(500).send('An unexpected error occured.')
-    next()
-})
 
 const port = process.env.PORT || 3001
 
@@ -83,8 +77,16 @@ app.get('/users', (req, res) => {
             res.status(404).send("Sorry, can't complete your request. Please try again")
             console.error(error)
         })
+})
 
-    app.use(recordRoutes)
+app.use(projectRoutes)
+app.use('/issue', issueRoutes)
+
+// Global error handling
+app.use((err, _req, res, next) => {
+    console.log(err)
+    res.status(500).send('An unexpected error occured.')
+    next()
 })
 
 app.listen(port, () => {

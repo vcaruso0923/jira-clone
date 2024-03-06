@@ -1,9 +1,29 @@
 import {Button} from 'antd'
-import React from 'react'
+import React, {useState} from 'react'
+import {CreateIssueModal} from './CreateIssueModal'
 
-export const Header = () => {
+interface HeaderProps {
+    loadIssues: () => void
+}
+
+export const Header: React.FC<HeaderProps> = ({loadIssues}) => {
+    const [isCreateIssueModalVisible, setIsCreateIssueModalVisible] = useState(false)
+
+    const onCreateIssueModalOpen = () => {
+        setIsCreateIssueModalVisible(true)
+    }
+
+    const onCreateIssueModalClose = () => {
+        setIsCreateIssueModalVisible(false)
+    }
+
     return (
         <div className='application-header'>
+            <CreateIssueModal
+                isCreateIssueModalVisible={isCreateIssueModalVisible}
+                onCreateIssueModalClose={onCreateIssueModalClose}
+                loadIssues={loadIssues}
+            />
             <div className='header-left'>
                 <h1 className='header-logo'>Jira Clone</h1>
                 <Button size='large' className='header-button'>
@@ -12,7 +32,7 @@ export const Header = () => {
                 <Button size='large' className='header-button'>
                     Issues
                 </Button>
-                <Button size='large' className='header-button'>
+                <Button size='large' className='header-button' onClick={() => onCreateIssueModalOpen()}>
                     Create
                 </Button>
             </div>
