@@ -9,7 +9,7 @@ const issueRoutes: Router = express.Router()
 issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>, res) => {
     let collection = await db.collection('issues')
 
-    const {sprint, _Id, title, assigneeId, projectId} = req.query
+    const {sprint, _id, title, assigneeName, projectId} = req.query
 
     const filter: any = {}
 
@@ -17,16 +17,16 @@ issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>
         filter.sprint = sprint
     }
 
-    if (_Id) {
-        filter._id = new ObjectId(_Id)
+    if (_id) {
+        filter._id = new ObjectId(_id)
     }
 
     if (title) {
         filter.title = {$regex: title.toString(), $options: 'i'} // Case-insensitive search
     }
 
-    if (assigneeId) {
-        filter.assigneeId = new ObjectId(assigneeId)
+    if (assigneeName) {
+        filter.assigneeName = {$regex: assigneeName.toString(), $options: 'i'} // Case-insensitive search
     }
 
     if (projectId) {
@@ -34,7 +34,7 @@ issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>
     }
 
     try {
-        let results = await collection.find(filter).limit(50).toArray.toArray()
+        let results = await collection.find(filter).limit(50).toArray()
         res.send(results).status(200)
     } catch (error) {
         console.error(error)

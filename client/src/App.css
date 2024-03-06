@@ -1,3 +1,8 @@
+/* General */
+.modal-submit-button {
+    margin-right: 16px;
+}
+
 /* Application */
 
 .App {
@@ -11,11 +16,11 @@
 }
 
 .application-wrapper {
-    height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 64px;
 }
 
 .application-header {
@@ -84,8 +89,15 @@
 
 /* Project.tsx */
 .projects-wrapper {
-    height: 100%;
     width: 100%;
+}
+
+.project-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 16px 0;
 }
 
 .kanban-board {
@@ -93,7 +105,6 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: 100%;
     width: 100%;
 }
 

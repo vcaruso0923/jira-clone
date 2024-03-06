@@ -1,24 +1,53 @@
-import React, {useState} from 'react'
-import {Modal, Form, Input, Button, Select, InputNumber, DatePicker, Alert} from 'antd'
-import {IssueRequestInterface} from '../../../server/types'
+import React, {useEffect, useState} from 'react'
+import {Modal, Form, Input, Button, Select, InputNumber, DatePicker, Alert, Spin} from 'antd'
+import {IssueRequestInterface, IssuesQueryInterface} from '../../../server/types'
+import {loadProjects, loadUsers} from '../common/api'
 
 interface CreateIssueModalProps {
     isCreateIssueModalVisible: boolean
     onCreateIssueModalClose: () => void
-    loadIssues: () => void
+    loadIssues: (issueSearchRequestBody?: IssuesQueryInterface) => void
+    isIssuesLoading: boolean
+    setIsIssuesLoading: (loading: boolean) => void
+}
+
+interface ProjectSelectionInterface {
+    value: string
+    label: string
 }
 
 export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     isCreateIssueModalVisible,
     onCreateIssueModalClose,
-    loadIssues
+    loadIssues,
+    isIssuesLoading,
+    setIsIssuesLoading
 }) => {
     const [form] = Form.useForm()
     const [error, setError] = useState(undefined)
+    const [projects, setProjects] = useState<ProjectSelectionInterface[] | undefined>([])
+    const [users, setUsers] = useState<any[] | undefined>([])
 
-    console.log(process.env.NODE_ENV)
+    useEffect(() => {
+        loadProjectsForSelect()
+        loadUsersForSelect()
+    }, [])
+
+    const loadProjectsForSelect = async () => {
+        const loadedProjects = await loadProjects()
+
+        setProjects(loadedProjects?.map(project => ({value: project._id.toString(), label: project.projectName})))
+    }
+
+    const loadUsersForSelect = async () => {
+        const data = await loadUsers()
+
+        setUsers(data?.map(user => ({value: user, label: user})))
+    }
 
     const handleSubmit = async (values: IssueRequestInterface) => {
+        setIsIssuesLoading(true)
+
         await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/issue/add`, {
             method: 'POST',
             headers: {
@@ -35,6 +64,9 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
                 setError(error)
                 return
             })
+            .finally(() => {
+                setIsIssuesLoading(false)
+            })
     }
 
     const handleCancel = () => {
@@ -45,101 +77,97 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     return (
         <Modal
             title={'Create an issue'}
-            visible={isCreateIssueModalVisible}
+            open={isCreateIssueModalVisible}
             onCancel={onCreateIssueModalClose}
             footer={null}
             width={800}
         >
-            <Form form={form} onFinish={handleSubmit} labelCol={{span: 4}}>
-                <Form.Item name='title' label='Title'>
-                    <Input />
-                </Form.Item>
+            {isIssuesLoading ? (
+                <Spin size='large' />
+            ) : (
+                <Form form={form} onFinish={handleSubmit} labelCol={{span: 4}}>
+                    <Form.Item name='title' label='Title'>
+                        <Input />
+                    </Form.Item>
 
-                <Form.Item name='project' label='Project'>
-                    <Select
-                        options={[
-                            {value: 'project1', label: 'Project 1'},
-                            {value: 'project2', label: 'Project 2'}
-                        ]}
-                    />
-                </Form.Item>
+                    <Form.Item name='project' label='Project'>
+                        <Select options={projects} />
+                    </Form.Item>
 
-                <Form.Item name='sprint' label='Sprint'>
-                    <Select
-                        options={[
-                            {value: 'Sprint 1', label: 'Sprint 1'},
-                            {value: 'Sprint 2', label: 'Sprint 2'},
-                            {value: 'Sprint 3', label: 'Sprint 3'}
-                        ]}
-                    />
-                </Form.Item>
+                    <Form.Item name='sprint' label='Sprint'>
+                        <Select
+                            options={[
+                                {value: 'Sprint 1', label: 'Sprint 1'},
+                                {value: 'Sprint 2', label: 'Sprint 2'},
+                                {value: 'Sprint 3', label: 'Sprint 3'}
+                            ]}
+                        />
+                    </Form.Item>
 
-                <Form.Item name='issueStatus' label='Initial Status'>
-                    <Select
-                        options={[
-                            {value: 'Planned', label: 'Planned'},
-                            {value: 'In Development', label: 'In Development'},
-                            {value: 'In Clarification', label: 'In Clarification'},
-                            {value: 'In QA', label: 'In QA'},
-                            {value: 'Closed', label: 'Closed'}
-                        ]}
-                    />
-                </Form.Item>
+                    <Form.Item name='issueStatus' label='Initial Status'>
+                        <Select
+                            options={[
+                                {value: 'Planned', label: 'Planned'},
+                                {value: 'In Development', label: 'In Development'},
+                                {value: 'In Clarification', label: 'In Clarification'},
+                                {value: 'In QA', label: 'In QA'},
+                                {value: 'Closed', label: 'Closed'}
+                            ]}
+                        />
+                    </Form.Item>
 
-                <Form.Item name='issueType' label='Type'>
-                    <Select
-                        options={[
-                            {value: 'Bug', label: 'Bug'},
-                            {value: 'Feature', label: 'Feature'},
-                            {value: 'Task', label: 'Task'}
-                        ]}
-                    />
-                </Form.Item>
+                    <Form.Item name='issueType' label='Type'>
+                        <Select
+                            options={[
+                                {value: 'Bug', label: 'Bug'},
+                                {value: 'Feature', label: 'Feature'},
+                                {value: 'Task', label: 'Task'}
+                            ]}
+                        />
+                    </Form.Item>
 
-                <Form.Item name='issuePriority' label='Priority'>
-                    <Select
-                        options={[
-                            {value: 'Low', label: 'Low'},
-                            {value: 'Medium', label: 'Medium'},
-                            {value: 'High', label: 'High'}
-                        ]}
-                    />
-                </Form.Item>
+                    <Form.Item name='issuePriority' label='Priority'>
+                        <Select
+                            options={[
+                                {value: 'Low', label: 'Low'},
+                                {value: 'Medium', label: 'Medium'},
+                                {value: 'High', label: 'High'}
+                            ]}
+                        />
+                    </Form.Item>
 
-                <Form.Item name='assignee' label='Assignee'>
-                    <Select
-                        options={[
-                            {value: 'user1', label: 'user1'},
-                            {value: 'user2', label: 'user2'}
-                        ]}
-                    />
-                </Form.Item>
+                    <Form.Item name='assigneeName' label='Assignee'>
+                        <Select
+                            options={users}
+                        />
+                    </Form.Item>
 
-                <Form.Item name='workPointEstimate' label='W.P. Estimate'>
-                    <InputNumber />
-                </Form.Item>
+                    <Form.Item name='workPointEstimate' label='W.P. Estimate'>
+                        <InputNumber />
+                    </Form.Item>
 
-                <Form.Item name='description' label='Description'>
-                    <Input.TextArea />
-                </Form.Item>
+                    <Form.Item name='description' label='Description'>
+                        <Input.TextArea />
+                    </Form.Item>
 
-                <Form.Item name='dueDate' label='Due Date'>
-                    <DatePicker />
-                </Form.Item>
+                    <Form.Item name='dueDate' label='Due Date'>
+                        <DatePicker />
+                    </Form.Item>
 
-                {error && <Alert message='Error Text' type='error' />}
+                    {error && <Alert message='Error Text' type='error' />}
 
-                {/* Add more form fields for other properties in IssueRequestInterface */}
-                <Form.Item>
-                    <Button type='primary' htmlType='submit'>
-                        Submit
-                    </Button>
+                    {/* Add more form fields for other properties in IssueRequestInterface */}
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' className='modal-submit-button'>
+                            Submit
+                        </Button>
 
-                    <Button type='default' onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                </Form.Item>
-            </Form>
+                        <Button type='default' onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </Form.Item>
+                </Form>
+            )}
         </Modal>
     )
 }

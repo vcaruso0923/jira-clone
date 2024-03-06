@@ -1,12 +1,15 @@
 import {Button} from 'antd'
 import React, {useState} from 'react'
 import {CreateIssueModal} from './CreateIssueModal'
+import {IssuesQueryInterface} from '../../../server/types'
 
 interface HeaderProps {
-    loadIssues: () => void
+    loadIssues: (issueSearchRequestBody?: IssuesQueryInterface) => void
+    isIssuesLoading: boolean
+    setIsIssuesLoading: (loading: boolean) => void
 }
 
-export const Header: React.FC<HeaderProps> = ({loadIssues}) => {
+export const Header: React.FC<HeaderProps> = ({loadIssues, isIssuesLoading, setIsIssuesLoading}) => {
     const [isCreateIssueModalVisible, setIsCreateIssueModalVisible] = useState(false)
 
     const onCreateIssueModalOpen = () => {
@@ -23,6 +26,8 @@ export const Header: React.FC<HeaderProps> = ({loadIssues}) => {
                 isCreateIssueModalVisible={isCreateIssueModalVisible}
                 onCreateIssueModalClose={onCreateIssueModalClose}
                 loadIssues={loadIssues}
+                isIssuesLoading={isIssuesLoading}
+                setIsIssuesLoading={setIsIssuesLoading}
             />
             <div className='header-left'>
                 <h1 className='header-logo'>Jira Clone</h1>

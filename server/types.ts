@@ -9,7 +9,6 @@ export interface IssueRequestInterface extends Partial<Request> {
     issueStatus: 'Planned' | 'In Development' | 'In Clarification' | 'In QA' | 'Closed'
     issueType: 'Bug' | 'Feature' | 'Task'
     issuePriority: 'High' | 'Medium' | 'Low'
-    assigneeId: ObjectId
     assigneeName: string
     workPointEstimate?: number
     description: string
@@ -18,14 +17,13 @@ export interface IssueRequestInterface extends Partial<Request> {
 }
 
 export interface IssueInterface {
-    _Id: ObjectId
+    _id: ObjectId
     title: string
     parentProject: ObjectId
     sprint: 'Sprint 1' | 'Sprint 2' | 'Sprint 3'
     issueStatus: 'Planned' | 'In Development' | 'In Clarification' | 'In QA' | 'Closed'
     issueType: 'Bug' | 'Feature' | 'Task'
     issuePriority: 'High' | 'Medium' | 'Low'
-    assigneeId: ObjectId
     assigneeName: string
     workPointEstimate?: number
     description: string
@@ -35,21 +33,23 @@ export interface IssueInterface {
 
 export interface IssuesQueryInterface {
     sprint?: string
-    _Id?: number
+    _id?: string
     title?: string
-    assigneeId?: number
-    projectId?: number
+    assigneeName?: string
+    projectId?: string
 }
 
 export interface ProjectRequestInterface extends Partial<Request> {
     date: Date
     projectName: string
+    sprints?: string[]
     childIssues?: ObjectId[]
 }
 
 export interface ProjectInterface {
-    _Id: ObjectId
+    _id: ObjectId
     date: Date
     projectName: string
+    sprints?: string[]
     childIssues?: ObjectId[]
 }

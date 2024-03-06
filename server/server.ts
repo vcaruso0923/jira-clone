@@ -34,7 +34,7 @@ const getAuth0ManagementAccessToken = () => {
         headers: {'content-type': 'application/x-www-form-urlencoded'},
         data: new URLSearchParams({
             grant_type: 'client_credentials',
-            client_id: process.env.SERVER_AUTH0_CLIENT_ID || '',
+            client_id: process.env.SERVER_AUTH0_CLIENT_id || '',
             client_secret: process.env.SERVER_AUTH0_CLIENT_SECRET || '',
             audience: `https://${process.env.SERVER_AUTH0_DOMAIN || ''}/api/v2/`
         })
@@ -79,7 +79,7 @@ app.get('/users', (req, res) => {
         })
 })
 
-app.use(projectRoutes)
+app.use('/project', projectRoutes)
 app.use('/issue', issueRoutes)
 
 // Global error handling
