@@ -1,6 +1,36 @@
 import {IssueInterface, IssueRequestInterface, ProjectInterface} from '../../../server/types'
 import {issueStatusesInOrder} from './constants'
 
+export const loadAllIssues = async (issueSearchRequestBody, setIssues: (data) => void) => {
+    let query
+
+    if (issueSearchRequestBody) {
+        query = new URLSearchParams({...issueSearchRequestBody}).toString()
+    }
+
+    await fetch(
+        `${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/issue/search${
+            query ? '?' + query : ''
+        }`,
+        {
+            method: 'GET'
+        }
+    )
+        .then(response => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                throw new Error('Failed to fetch issues')
+            }
+        })
+        .then(data => {
+            setIssues(data)
+        })
+        .catch(error => {
+            console.error(error)
+        })
+}
+
 export const loadProjects = async (): Promise<ProjectInterface[] | undefined> => {
     return await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/project/search`, {
         method: 'GET'

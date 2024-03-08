@@ -6,6 +6,7 @@ import {useAuth0} from '@auth0/auth0-react'
 import {AuthForm} from './components/AuthForm'
 import {Routes, Route, useNavigate} from 'react-router-dom'
 import {IssueInterface, IssuesQueryInterface} from '../../server/types'
+import {loadAllIssues} from './common/api'
 
 export const App = () => {
     const {isAuthenticated, handleRedirectCallback} = useAuth0()
@@ -45,33 +46,7 @@ export const App = () => {
     const loadIssues = async (issueSearchRequestBody?: IssuesQueryInterface) => {
         setIsIssuesLoading(true)
 
-        let query
-
-        if (issueSearchRequestBody) {
-            query = new URLSearchParams({...issueSearchRequestBody}).toString()
-        }
-
-        await fetch(
-            `${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/issue/search${
-                query ? '?' + query : ''
-            }`,
-            {
-                method: 'GET'
-            }
-        )
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                } else {
-                    throw new Error('Failed to fetch issues')
-                }
-            })
-            .then(data => {
-                setIssues(data)
-            })
-            .catch(error => {
-                console.error(error)
-            })
+        await loadAllIssues(issueSearchRequestBody, setIssues)
 
         setIsIssuesLoading(false)
     }
