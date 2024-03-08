@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Modal, Form, Input, Button, Select, InputNumber, DatePicker, Alert, Spin} from 'antd'
 import {IssueRequestInterface, IssuesQueryInterface} from '../../../server/types'
 import {loadProjects, loadUsers} from '../common/api'
+import { IssueStatuses } from '../common/constants'
 
 interface CreateIssueModalProps {
     isCreateIssueModalVisible: boolean
@@ -36,7 +37,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     const loadProjectsForSelect = async () => {
         const loadedProjects = await loadProjects()
 
-        setProjects(loadedProjects?.map(project => ({value: project._id.toString(), label: project.projectName})))
+        setProjects(loadedProjects?.map(project => ({value: project?._id.toString(), label: project.projectName})))
     }
 
     const loadUsersForSelect = async () => {
@@ -107,11 +108,11 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
                     <Form.Item name='issueStatus' label='Initial Status'>
                         <Select
                             options={[
-                                {value: 'Planned', label: 'Planned'},
-                                {value: 'In Development', label: 'In Development'},
-                                {value: 'In Clarification', label: 'In Clarification'},
-                                {value: 'In QA', label: 'In QA'},
-                                {value: 'Closed', label: 'Closed'}
+                                {value: IssueStatuses.PLANNED, label: IssueStatuses.PLANNED},
+                                {value: IssueStatuses.IN_DEVELOPMENT, label: IssueStatuses.IN_DEVELOPMENT},
+                                {value: IssueStatuses.IN_CLARIFICATION, label: IssueStatuses.IN_CLARIFICATION},
+                                {value: IssueStatuses.IN_QA, label: IssueStatuses.IN_QA},
+                                {value: IssueStatuses.CLOSED, label: IssueStatuses.CLOSED}
                             ]}
                         />
                     </Form.Item>

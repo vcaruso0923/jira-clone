@@ -1,7 +1,7 @@
 import express, {Request, Response, Router} from 'express'
 import db from '../db/conn.ts'
 import {ObjectId} from 'mongodb'
-import {IssueRequestInterface, IssuesQueryInterface} from '../types.ts'
+import {IssueInterface, IssueRequestInterface, IssuesQueryInterface} from '../types.ts'
 
 const issueRoutes: Router = express.Router()
 
@@ -46,18 +46,44 @@ issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>
 issueRoutes.get('/project/:id', async (req, res) => {
     let collection = await db.collection('issues')
     let query = {projectId: req.params.id}
-    let results = await collection.find(query).toArray()
-    res.send(results).status(200)
+
+    try {
+        let results = await collection.find(query).toArray()
+        res.send(results).status(200)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Sorry, can't complete your request. Please try again")
+    }
+})
+
+// Update a single issue
+issueRoutes.put('/update/:id', async (req: Request<{id: string}, {}, {}, IssueInterface>, res: Response) => {
+    let collection = await db.collection('issues')
+    let query = {_id: new ObjectId(req.params.id)}
+    let newValues = {$set: req.body}
+
+    try {
+        let result = await collection.updateOne(query, newValues)
+        res.send(result).status(204)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Sorry, can't complete your request. Please try again")
+    }
 })
 
 // Get a single issue
 issueRoutes.get('/:id', async (req, res) => {
     let collection = await db.collection('issues')
     let query = {_id: new ObjectId(req.params.id)}
-    let result = await collection.findOne(query)
 
-    if (!result) res.send('Not found').status(404)
-    else res.send(result).status(200)
+    try {
+        let result = await collection.findOne(query)
+        if (!result) res.send('Not found').status(404)
+        else res.send(result).status(200)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Sorry, can't complete your request. Please try again")
+    }
 })
 
 // Add a new document to the collection
@@ -65,19 +91,30 @@ issueRoutes.post('/add', async (req: Request<{}, {}, IssueRequestInterface>, res
     let collection = await db.collection('issues')
     let newDocument = req.body
     newDocument.date = new Date()
+    newDocument.lastUpdated = new Date()
 
-    let result = await collection.insertOne(newDocument)
-    res.send(result).status(204)
+    try {
+        let result = await collection.insertOne(newDocument)
+        res.send(result).status(204)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send("Sorry, can't complete your request. Please try again")
+    }
 })
 
 // This section will help you delete a issue
 issueRoutes.route('/delete/:id').delete((req, response) => {
     let myquery = {_id: new ObjectId(req.params.id)}
-    db.collection('issues').deleteOne(myquery, function (err, obj) {
-        if (err) throw err
-        console.log('1 document deleted')
-        response.json(obj)
-    })
+    try {
+        db.collection('issues').deleteOne(myquery, function (err, obj) {
+            if (err) throw err
+            console.log('1 document deleted')
+            response.json(obj)
+        })
+    } catch (error) {
+        console.error(error)
+        response.status(500).send("Sorry, can't complete your request. Please try again")
+    }
 })
 
 export default issueRoutes

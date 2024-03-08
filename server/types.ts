@@ -14,10 +14,12 @@ export interface IssueRequestInterface extends Partial<Request> {
     description: string
     dueDate?: Date
     reporter: string
+    lastUpdated?: Date
 }
 
 export interface IssueInterface {
-    _id: ObjectId
+    _id?: ObjectId
+    date?: Date
     title: string
     parentProject: ObjectId
     sprint: 'Sprint 1' | 'Sprint 2' | 'Sprint 3'
@@ -29,6 +31,7 @@ export interface IssueInterface {
     description: string
     dueDate?: Date
     reporter: string
+    lastUpdated?: Date
 }
 
 export interface IssuesQueryInterface {
@@ -44,6 +47,7 @@ export interface ProjectRequestInterface extends Partial<Request> {
     projectName: string
     sprints?: string[]
     childIssues?: ObjectId[]
+    lastUpdated?: Date
 }
 
 export interface ProjectInterface {
@@ -52,4 +56,5 @@ export interface ProjectInterface {
     projectName: string
     sprints?: string[]
     childIssues?: ObjectId[]
+    lastUpdated?: Date
 }
