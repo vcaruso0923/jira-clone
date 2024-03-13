@@ -9,7 +9,7 @@ const issueRoutes: Router = express.Router()
 issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>, res) => {
     let collection = await db.collection('issues')
 
-    const {sprint, _id, title, assigneeName, projectId} = req.query
+    const {sprint, _id, title, assigneeName, parentProject} = req.query
 
     const filter: any = {}
 
@@ -29,8 +29,8 @@ issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>
         filter.assigneeName = decodeURI(assigneeName)
     }
 
-    if (projectId) {
-        filter.projectId = new ObjectId(projectId)
+    if (parentProject) {
+        filter.parentProject = new ObjectId(parentProject)
     }
 
     try {

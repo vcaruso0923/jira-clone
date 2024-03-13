@@ -39,7 +39,7 @@ export interface IssuesQueryInterface {
     _id?: string
     title?: string
     assigneeName?: string
-    projectId?: string
+    parentProject?: string
 }
 
 export interface ProjectRequestInterface extends Partial<Request> {

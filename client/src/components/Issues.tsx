@@ -96,7 +96,7 @@ export const Issues: React.FC<IssuesProps> = ({issues, loadIssues, isIssuesLoadi
             />
             <div className='project-filters'>
                 <Form form={issuesForm} onFinish={handleSubmit} layout='inline' style={{maxWidth: 'none'}}>
-                    <Form.Item name='project' label='Project'>
+                    <Form.Item name='parentProject' label='Project'>
                         <Select
                             onChange={val => {
                                 if (val) setIsSprintFilterDisabled(false)
