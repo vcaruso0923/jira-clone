@@ -115,6 +115,9 @@ body {
 
 .issue-card-column {
     height: 70vh;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #696969 #202124;
 }
 
 .issue-card-text-wrapper {
@@ -183,7 +186,7 @@ body {
     text-align: left;
     overflow-y: scroll;
     scrollbar-width: thin;
-    scrollbar-color: #fff #202124;
+    scrollbar-color: #696969 #202124;
 }
 
 .issues-list {
@@ -226,7 +229,7 @@ body {
     padding: 16px;
     overflow-y: scroll;
     scrollbar-width: thin;
-    scrollbar-color: #fff #202124;
+    scrollbar-color: #696969 #202124;
     height: calc(100% - 32px);
 }
 

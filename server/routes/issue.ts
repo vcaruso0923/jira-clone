@@ -30,7 +30,7 @@ issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>
     }
 
     if (parentProject) {
-        filter.parentProject = new ObjectId(parentProject)
+        filter.parentProject = parentProject
     }
 
     try {
