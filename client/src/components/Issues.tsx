@@ -62,7 +62,6 @@ export const Issues: React.FC<IssuesProps> = ({issues, loadIssues, isIssuesLoadi
     const handleSubmit = async (values: IssuesQueryInterface) => {
         setIsApplyButtonDisabled(true)
         Object.keys(values).forEach(key => (values[key] === undefined ? delete values[key] : {}))
-        console.log(values)
 
         await loadIssues(values)
     }

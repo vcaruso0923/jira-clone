@@ -52,6 +52,8 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
     const [isSprintFilterDisabled, setIsSprintFilterDisabled] = useState(true)
 
     const handleSubmit = async (values: IssuesQueryInterface) => {
+        Object.keys(values).forEach(key => (values[key] === undefined ? delete values[key] : {}))
+
         await loadIssues(values)
     }
 
@@ -154,7 +156,10 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                     <Card
                                         key={card?._id?.toString() || ''}
                                         title={
-                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                            <Button
+                                                className='issue-card-title-button'
+                                                onClick={() => navigate(`/issues/${card._id}`)}
+                                            >
                                                 {card.title}
                                             </Button>
                                         }
@@ -201,7 +206,10 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                     <Card
                                         key={card?._id?.toString() || ''}
                                         title={
-                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                            <Button
+                                                className='issue-card-title-button'
+                                                onClick={() => navigate(`/issues/${card._id}`)}
+                                            >
                                                 {card.title}
                                             </Button>
                                         }
@@ -247,7 +255,10 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                     <Card
                                         key={card?._id?.toString() || ''}
                                         title={
-                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                            <Button
+                                                className='issue-card-title-button'
+                                                onClick={() => navigate(`/issues/${card._id}`)}
+                                            >
                                                 {card.title}
                                             </Button>
                                         }
@@ -289,7 +300,10 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                     <Card
                                         key={card?._id?.toString() || ''}
                                         title={
-                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                            <Button
+                                                className='issue-card-title-button'
+                                                onClick={() => navigate(`/issues/${card._id}`)}
+                                            >
                                                 {card.title}
                                             </Button>
                                         }
@@ -331,7 +345,10 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                     <Card
                                         key={card?._id?.toString() || ''}
                                         title={
-                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                            <Button
+                                                className='issue-card-title-button'
+                                                onClick={() => navigate(`/issues/${card._id}`)}
+                                            >
                                                 {card.title}
                                             </Button>
                                         }

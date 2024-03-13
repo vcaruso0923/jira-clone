@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {Modal, Form, Input, Button, Select, InputNumber, DatePicker, Alert, Spin} from 'antd'
 import {IssueInterface, IssueRequestInterface, IssuesQueryInterface} from '../../../server/types'
-import {loadProjects, loadUsers, updateSingleIssue} from '../common/api'
+import {loadProjects, loadUsers} from '../common/api'
 import {IssueStatuses} from '../common/constants'
+import moment from 'moment'
 
 interface CreateIssueModalProps {
     isCreateIssueModalVisible: boolean
@@ -39,7 +40,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     }, [])
 
     useEffect(() => {
-        form.setFieldsValue(issueToEdit)
+        form.setFieldsValue({...issueToEdit, dueDate: issueToEdit?.dueDate && moment(issueToEdit?.dueDate)})
     }, [issueToEdit])
 
     const loadProjectsForSelect = async () => {
@@ -128,7 +129,12 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
             {isIssuesLoading ? (
                 <Spin size='large' />
             ) : (
-                <Form form={form} onFinish={handleSubmit} labelCol={{span: 4}} initialValues={issueToEdit}>
+                <Form
+                    form={form}
+                    onFinish={handleSubmit}
+                    labelCol={{span: 4}}
+                    initialValues={{...issueToEdit, dueDate: issueToEdit?.dueDate && moment(issueToEdit?.dueDate)}}
+                >
                     <Form.Item name='title' label='Title'>
                         <Input />
                     </Form.Item>
