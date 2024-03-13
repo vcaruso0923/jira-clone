@@ -28,7 +28,7 @@ app.use(express.json())
 let auth0ManagementAccessToken = ''
 
 // Function for fetching auth0 managementAPI
-const getAuth0ManagementAccessToken = () => {
+const getAuth0ManagementAccessToken = async () => {
     var getAuth0ManagementAccessTokenOptions = {
         method: 'POST',
         url: `https://${process.env.SERVER_AUTH0_DOMAIN || ''}/oauth/token`,
@@ -59,7 +59,11 @@ const getAuth0ManagementAccessToken = () => {
 getAuth0ManagementAccessToken()
 
 // Get all users
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+    if (!auth0ManagementAccessToken) {
+        await getAuth0ManagementAccessToken()
+    }
+
     var options = {
         method: 'GET',
         url: `https://${process.env.SERVER_AUTH0_DOMAIN || ''}/api/v2/users`,

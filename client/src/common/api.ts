@@ -58,7 +58,7 @@ export const loadUsers = async (): Promise<any[] | undefined> => {
             if (response.ok) {
                 return response.json()
             } else {
-                throw new Error('Failed to fetch issues')
+                throw new Error('Failed to fetch users')
             }
         })
         .then(data => {
