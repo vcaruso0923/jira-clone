@@ -5,6 +5,11 @@ import path from 'path'
 import axios from 'axios'
 import projectRoutes from './routes/project.ts'
 import issueRoutes from './routes/issue.ts'
+import {fileURLToPath} from 'url'
+import {dirname} from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const app = express()
 
