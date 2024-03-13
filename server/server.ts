@@ -18,10 +18,10 @@ const port = process.env.PORT || 3001
 // Serve up the client buil if we're in production - this way we can
 // host the frontend & backend together on one server on heroku
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'client', 'build')))
+    app.use(express.static(path.join(__dirname, '..', 'client', 'build')))
 
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+        res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'))
     })
 }
 
