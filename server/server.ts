@@ -29,6 +29,11 @@ let auth0ManagementAccessToken = ''
 
 // Function for fetching auth0 managementAPI
 const getAuth0ManagementAccessToken = async () => {
+    console.log('HERE ARE THE ENV VARIABLES:')
+    console.log(process.env.SERVER_AUTH0_DOMAIN)
+    console.log(process.env.SERVER_AUTH0_CLIENT_id)
+    console.log(process.env.SERVER_AUTH0_CLIENT_SECRET)
+
     var getAuth0ManagementAccessTokenOptions = {
         method: 'POST',
         url: `https://${process.env.SERVER_AUTH0_DOMAIN || ''}/oauth/token`,
@@ -45,6 +50,8 @@ const getAuth0ManagementAccessToken = async () => {
         .request(getAuth0ManagementAccessTokenOptions)
         .then(function (response) {
             auth0ManagementAccessToken = response.data.access_token
+            console.log('HERE IS PROVIDED ACCESS TOKEN')
+            console.log(auth0ManagementAccessToken)
 
             // Get a new auth0 management api token after this one expires
             setTimeout(() => {
