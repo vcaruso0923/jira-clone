@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import {Modal, Form, Input, Button, Select, InputNumber, DatePicker, Alert, Spin} from 'antd'
-import {IssueRequestInterface, IssuesQueryInterface} from '../../../server/types'
-import {loadProjects, loadUsers} from '../common/api'
-import { IssueStatuses } from '../common/constants'
+import {IssueInterface, IssueRequestInterface, IssuesQueryInterface} from '../../../server/types'
+import {loadProjects, loadUsers, updateSingleIssue} from '../common/api'
+import {IssueStatuses} from '../common/constants'
 
 interface CreateIssueModalProps {
     isCreateIssueModalVisible: boolean
@@ -10,6 +10,8 @@ interface CreateIssueModalProps {
     loadIssues: (issueSearchRequestBody?: IssuesQueryInterface) => void
     isIssuesLoading: boolean
     setIsIssuesLoading: (loading: boolean) => void
+    isEditMode?: boolean
+    issueToEdit?: IssueInterface
 }
 
 interface ProjectSelectionInterface {
@@ -22,7 +24,9 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     onCreateIssueModalClose,
     loadIssues,
     isIssuesLoading,
-    setIsIssuesLoading
+    setIsIssuesLoading,
+    isEditMode,
+    issueToEdit
 }) => {
     const [form] = Form.useForm()
     const [error, setError] = useState(undefined)
@@ -33,6 +37,10 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         loadProjectsForSelect()
         loadUsersForSelect()
     }, [])
+
+    useEffect(() => {
+        form.setFieldsValue(issueToEdit)
+    }, [issueToEdit])
 
     const loadProjectsForSelect = async () => {
         const loadedProjects = await loadProjects()
@@ -49,25 +57,59 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     const handleSubmit = async (values: IssueRequestInterface) => {
         setIsIssuesLoading(true)
 
-        await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/issue/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-        })
-            .then(() => {
-                form.resetFields()
-                onCreateIssueModalClose()
-                loadIssues()
+        if (isEditMode && issueToEdit?._id) {
+            await fetch(
+                `${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/issue/update/${
+                    issueToEdit?._id
+                }`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(values)
+                }
+            )
+                .then(response => {
+                    if (response.ok) {
+                        form.resetFields()
+                        onCreateIssueModalClose()
+                        loadIssues()
+                    } else {
+                        throw new Error('Failed to fetch issues')
+                    }
+                })
+                .then(data => {
+                    return data
+                })
+                .catch(error => {
+                    setError(error)
+                    console.error(error)
+                })
+                .finally(() => {
+                    setIsIssuesLoading(false)
+                })
+        } else {
+            await fetch(`${process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : ''}/issue/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(values)
             })
-            .catch(error => {
-                setError(error)
-                return
-            })
-            .finally(() => {
-                setIsIssuesLoading(false)
-            })
+                .then(() => {
+                    form.resetFields()
+                    onCreateIssueModalClose()
+                    loadIssues()
+                })
+                .catch(error => {
+                    setError(error)
+                    return
+                })
+                .finally(() => {
+                    setIsIssuesLoading(false)
+                })
+        }
     }
 
     const handleCancel = () => {
@@ -86,12 +128,12 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
             {isIssuesLoading ? (
                 <Spin size='large' />
             ) : (
-                <Form form={form} onFinish={handleSubmit} labelCol={{span: 4}}>
+                <Form form={form} onFinish={handleSubmit} labelCol={{span: 4}} initialValues={issueToEdit}>
                     <Form.Item name='title' label='Title'>
                         <Input />
                     </Form.Item>
 
-                    <Form.Item name='project' label='Project'>
+                    <Form.Item name='parentProject' label='Project'>
                         <Select options={projects} />
                     </Form.Item>
 
@@ -105,7 +147,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
                         />
                     </Form.Item>
 
-                    <Form.Item name='issueStatus' label='Initial Status'>
+                    <Form.Item name='issueStatus' label='Status'>
                         <Select
                             options={[
                                 {value: IssueStatuses.PLANNED, label: IssueStatuses.PLANNED},
@@ -138,9 +180,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
                     </Form.Item>
 
                     <Form.Item name='assigneeName' label='Assignee'>
-                        <Select
-                            options={users}
-                        />
+                        <Select options={users} />
                     </Form.Item>
 
                     <Form.Item name='workPointEstimate' label='W.P. Estimate'>

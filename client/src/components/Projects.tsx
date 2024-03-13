@@ -5,6 +5,7 @@ import {IssueInterface, IssuesQueryInterface} from '../../../server/types'
 import CreateProjectModal from './CreateProjectModal'
 import {loadAndUpdateIssuesStatus, loadProjects} from '../common/api'
 import {IssueStatuses} from '../common/constants'
+import {useNavigate} from 'react-router-dom'
 
 interface ProjectsProps {
     issues: IssueInterface[]
@@ -46,7 +47,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
     }
 
     // Filter form
-    const [form] = Form.useForm()
+    const [projectsForm] = Form.useForm()
 
     const [isSprintFilterDisabled, setIsSprintFilterDisabled] = useState(true)
 
@@ -68,6 +69,8 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
         setQaCards(issues.filter(issues => issues.issueStatus === IssueStatuses.IN_QA))
         setClosedCards(issues.filter(issues => issues.issueStatus === IssueStatuses.CLOSED))
     }, [issues])
+
+    const navigate = useNavigate()
 
     const handleMoveLeft = async (issueId: string) => {
         setIsLoading(true)
@@ -101,7 +104,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
             />
 
             <div className='project-filters'>
-                <Form form={form} onFinish={handleSubmit} layout='inline' style={{maxWidth: 'none'}}>
+                <Form form={projectsForm} onFinish={handleSubmit} layout='inline' style={{maxWidth: 'none'}}>
                     <Form.Item name='project' label='Project'>
                         <Select
                             onChange={val => {
@@ -110,6 +113,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                             options={projects}
                             style={{width: 150}}
                             placeholder='Select a project'
+                            allowClear
                         />
                     </Form.Item>
 
@@ -122,6 +126,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                             ]}
                             style={{width: 150}}
                             placeholder='Select a sprint'
+                            allowClear
                             disabled={isSprintFilterDisabled} // Disable the sprint select until a project is selected
                         />
                     </Form.Item>
@@ -140,7 +145,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
 
             <Row className='kanban-board' gutter={[16, 16]}>
                 <Col span={4}>
-                    <Card className='issue-card' title={IssueStatuses.PLANNED} style={{minHeight: '300px'}}>
+                    <Card className='issue-card-column' title={IssueStatuses.PLANNED} style={{minHeight: '300px'}}>
                         {isLoading ? (
                             <Spin size='large' />
                         ) : (
@@ -148,8 +153,13 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                 {plannedCards?.map(card => (
                                     <Card
                                         key={card?._id?.toString() || ''}
-                                        title={card.title}
+                                        title={
+                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                                {card.title}
+                                            </Button>
+                                        }
                                         style={{marginBottom: '8px'}}
+                                        className='issue-card'
                                     >
                                         <div className='issue-card-text-wrapper'>
                                             <p className='issue-card-text'>{card.assigneeName}</p>
@@ -178,7 +188,11 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                     </Card>
                 </Col>
                 <Col span={4}>
-                    <Card className='issue-card' title={IssueStatuses.IN_DEVELOPMENT} style={{minHeight: '300px'}}>
+                    <Card
+                        className='issue-card-column'
+                        title={IssueStatuses.IN_DEVELOPMENT}
+                        style={{minHeight: '300px'}}
+                    >
                         {isLoading ? (
                             <Spin size='large' />
                         ) : (
@@ -186,8 +200,13 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                 {developmentCards?.map(card => (
                                     <Card
                                         key={card?._id?.toString() || ''}
-                                        title={card.title}
+                                        title={
+                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                                {card.title}
+                                            </Button>
+                                        }
                                         style={{marginBottom: '8px'}}
+                                        className='issue-card'
                                     >
                                         <div className='issue-card-text-wrapper'>
                                             <p className='issue-card-text'>{card.assigneeName}</p>
@@ -215,7 +234,11 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                     </Card>
                 </Col>
                 <Col span={4}>
-                    <Card className='issue-card' title={IssueStatuses.IN_CLARIFICATION} style={{minHeight: '300px'}}>
+                    <Card
+                        className='issue-card-column'
+                        title={IssueStatuses.IN_CLARIFICATION}
+                        style={{minHeight: '300px'}}
+                    >
                         {isLoading ? (
                             <Spin size='large' />
                         ) : (
@@ -223,8 +246,13 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                 {clarificationCards?.map(card => (
                                     <Card
                                         key={card?._id?.toString() || ''}
-                                        title={card.title}
+                                        title={
+                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                                {card.title}
+                                            </Button>
+                                        }
                                         style={{marginBottom: '8px'}}
+                                        className='issue-card'
                                     >
                                         <div className='issue-card-text-wrapper'>
                                             <p className='issue-card-text'>{card.assigneeName}</p>
@@ -252,7 +280,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                     </Card>
                 </Col>
                 <Col span={4}>
-                    <Card className='issue-card' title={IssueStatuses.IN_QA} style={{minHeight: '300px'}}>
+                    <Card className='issue-card-column' title={IssueStatuses.IN_QA} style={{minHeight: '300px'}}>
                         {isLoading ? (
                             <Spin size='large' />
                         ) : (
@@ -260,8 +288,13 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                 {qaCards?.map(card => (
                                     <Card
                                         key={card?._id?.toString() || ''}
-                                        title={card.title}
+                                        title={
+                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                                {card.title}
+                                            </Button>
+                                        }
                                         style={{marginBottom: '8px'}}
+                                        className='issue-card'
                                     >
                                         <div className='issue-card-text-wrapper'>
                                             <p className='issue-card-text'>{card.assigneeName}</p>
@@ -289,7 +322,7 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                     </Card>
                 </Col>
                 <Col span={4}>
-                    <Card className='issue-card' title={IssueStatuses.CLOSED} style={{minHeight: '300px'}}>
+                    <Card className='issue-card-column' title={IssueStatuses.CLOSED} style={{minHeight: '300px'}}>
                         {isLoading ? (
                             <Spin size='large' />
                         ) : (
@@ -297,8 +330,13 @@ export const Projects: React.FC<ProjectsProps> = ({issues, loadIssues, isIssuesL
                                 {closedCards?.map(card => (
                                     <Card
                                         key={card?._id?.toString() || ''}
-                                        title={card.title}
+                                        title={
+                                            <Button onClick={() => navigate(`/issues/${card._id}`)}>
+                                                {card.title}
+                                            </Button>
+                                        }
                                         style={{marginBottom: '8px'}}
+                                        className='issue-card'
                                     >
                                         <div className='issue-card-text-wrapper'>
                                             <p className='issue-card-text'>{card.assigneeName}</p>

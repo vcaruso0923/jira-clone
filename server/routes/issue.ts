@@ -26,7 +26,7 @@ issueRoutes.get('/search', async (req: Request<{}, {}, {}, IssuesQueryInterface>
     }
 
     if (assigneeName) {
-        filter.assigneeName = {$regex: assigneeName.toString(), $options: 'i'} // Case-insensitive search
+        filter.assigneeName = decodeURI(assigneeName)
     }
 
     if (projectId) {

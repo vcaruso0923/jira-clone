@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import './App.css'
 import {Projects} from './components/Projects'
+import {Issues} from './components/Issues'
 import {Header} from './components/Header'
 import {useAuth0} from '@auth0/auth0-react'
 import {AuthForm} from './components/AuthForm'
@@ -15,13 +16,13 @@ export const App = () => {
     const firstUseEffect = useRef(true)
 
     useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/projects')
-        }
-
         if (firstUseEffect.current) {
             handleLoad()
             firstUseEffect.current = false
+        } else if (isAuthenticated) {
+            if (window.location.pathname === '/') {
+                navigate('/projects')
+            }
         }
     }, [isAuthenticated])
 
@@ -67,6 +68,17 @@ export const App = () => {
                         path='projects'
                         element={
                             <Projects
+                                loadIssues={loadIssues}
+                                issues={issues}
+                                isIssuesLoading={isIssuesLoading}
+                                setIsIssuesLoading={setIsIssuesLoading}
+                            />
+                        }
+                    />
+                    <Route
+                        path='issues/:issueId'
+                        element={
+                            <Issues
                                 loadIssues={loadIssues}
                                 issues={issues}
                                 isIssuesLoading={isIssuesLoading}
